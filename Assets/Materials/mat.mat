@@ -92,7 +92,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _Fill: 0.13
+    - _Fill: 0.2
     - _FresnelPower: 3
     - _GlossMapScale: 1
     - _Glossiness: 0.5
@@ -114,6 +114,6 @@ Material:
     - _Color: {r: 1, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FresnelColor: {r: 0.8352941, g: 0.29210332, b: 0.22352938, a: 0}
-    - _Liquid: {r: 0.8, g: 0.31372553, b: 0.34475812, a: 0}
+    - _Liquid: {r: 0.35960093, g: 0, b: 0.7106918, a: 0}
     - _Surface: {r: 0.8156863, g: 0.011764702, b: 0.018501896, a: 0}
   m_BuildTextureStacks: []
