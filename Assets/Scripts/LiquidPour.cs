@@ -6,19 +6,19 @@ using System;
 public class LiquidPour : MonoBehaviour
 {
     //public ParticleSystem pourParticleSystem; // Reference to the particle system
-    public float fillAmount = 0.2f; // Initial fill amount (1.0 = full, 0.0 = empty)
-    public float pourRate = 0.001f; // Rate at which liquid decreases per second when pouring
+    public float fillAmount = 0.13f; // Initial fill amount (1.0 = full, 0.0 = empty)
+    public float pourRate = 0.01f; // Rate at which liquid decreases per second when pouring
     public TextMeshProUGUI debugText;
+    public TextMeshProUGUI debugText1;
     public Material liquidMaterial; // access material
-    public GameObject streamPrefab;
-    public Transform origin = null;
-    //private Stream currentStream = null;
     private bool isPouring = false;
     public ParticleSystem pourParticleSystem;
+    //public GameObject stream;
 
     void Awake()
     {
         pourParticleSystem.Stop();
+        //stream.SetActive(false);
     }
 
     void Update()
@@ -43,29 +43,20 @@ public class LiquidPour : MonoBehaviour
 
 
         // If pouring, decrease the fill amount
-        if (isPouring && fillAmount > 0.005)
+        if (isPouring && (fillAmount > 0.005))
         {
             pourParticleSystem.Play();
-            //currentStream = CreateStream();
-            //currentStream.Begin();
             fillAmount -= pourRate * Time.deltaTime;
             fillAmount = Mathf.Clamp(fillAmount, 0.0f, 0.2f);
             debugText.text = "TRYING TO POUR, FILL AMOUNT IS: " + fillAmount;
             liquidMaterial.SetFloat("_Fill", fillAmount);
+            //stream.SetActive(true);
         }
         else
         {
-            if(fillAmount <= 0.005)
-            {
-                pourParticleSystem.Stop();
-            }
-
+            debugText.text = "STOPPING POUR, FILL AMOUNT IS: " + fillAmount;
+            pourParticleSystem.Stop();
+            //stream.SetActive(false);
         }
-    }
-
-    private Stream CreateStream()
-    {
-        GameObject streamObject = Instantiate(streamPrefab, origin.position, Quaternion.identity, transform);
-        return streamObject.GetComponent<Stream>();
     }
 }
