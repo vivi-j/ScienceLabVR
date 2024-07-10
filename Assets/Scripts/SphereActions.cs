@@ -21,6 +21,20 @@ public class SphereActions : MonoBehaviour
     public TMP_Text ballMass;
     public TMP_Text ballRadius;
 
+    public Button increaseRadiusButton;
+    public Button decreaseRadiusButton;
+
+    public Button increaseMassButton;
+    public Button decreaseMassButton;
+
+    private const float MinRadius = 0.1f;
+    private const float MaxRadius = 0.4f;
+    private const float RadiusStep = 0.05f;
+
+    private const float MinMass = 1.0f;
+    private const float MaxMass = 10.0f;
+    private const float MassStep = 1.0f;
+
 
     void Start()
     {
@@ -41,28 +55,73 @@ public class SphereActions : MonoBehaviour
 
     public void UpdateRadius(float value)
     {
-        float newRadius = Mathf.Lerp(0.1f, 0.4f, value);
-        sphereTransform.localScale = new Vector3(newRadius, newRadius, newRadius);
-        //NotifyRampActions();
-        ballRadius.text = $"{newRadius:F2} m";
+        sphereTransform.localScale = new Vector3(value, value, value);
+        ballRadius.text = $"{value:F2} m";
+        UpdateButtonStatesRadius(value);
+        radiusSlider.value = value;
     }
+
+
+    public void IncreaseRadius()
+    {
+        float currentRadius = sphereTransform.localScale.x;
+        float newRadius = Mathf.Clamp(currentRadius + RadiusStep, MinRadius, MaxRadius);
+        sphereTransform.localScale = new Vector3(newRadius, newRadius, newRadius);
+        ballRadius.text = $"{newRadius:F2} m";
+        radiusSlider.value = newRadius;
+        UpdateButtonStatesRadius(newRadius);
+    }
+
+    public void DecreaseRadius()
+    {
+        float currentRadius = sphereTransform.localScale.x;
+        float newRadius = Mathf.Clamp(currentRadius - RadiusStep, MinRadius, MaxRadius);
+        sphereTransform.localScale = new Vector3(newRadius, newRadius, newRadius);
+        ballRadius.text = $"{newRadius:F2} m";
+        radiusSlider.value = newRadius;
+        UpdateButtonStatesRadius(newRadius);
+    }
+
+    private void UpdateButtonStatesRadius(float currentRadius)
+    {
+        increaseRadiusButton.interactable = currentRadius < MaxRadius;
+        decreaseRadiusButton.interactable = currentRadius > MinRadius;
+    }
+
 
     public void UpdateMass(float value)
     {
-        float newMass = Mathf.Lerp(1.0f, 1000.0f, value);
-        sphereRigidbody.mass = newMass;
-        //NotifyRampActions();
+        sphereRigidbody.mass = value;
         ballMass.text = $"{value:F2} kg";
+        massSlider.value = value;
+        UpdateButtonStatesMass(value);
     }
 
-    /*  private void NotifyRampActions()
-      {
-          RampActions rampActions = FindObjectOfType<RampActions>();
-          if (rampActions != null)
-          {
-              rampActions.CalculatePhysics();
-          }
-      }*/
+    public void IncreaseMass()
+    {
+        float currentMass = sphereRigidbody.mass;
+        float newMass = Mathf.Clamp(currentMass + MassStep, MinMass, MaxMass);
+        sphereRigidbody.mass = newMass;
+        ballMass.text = $"{newMass:F2} kg";
+        massSlider.value = newMass;
+        UpdateButtonStatesMass(newMass);
+    }
+
+    public void DecreaseMass()
+    {
+        float currentMass = sphereRigidbody.mass;
+        float newMass = Mathf.Clamp(currentMass - MassStep, MinMass, MaxMass);
+        sphereRigidbody.mass = newMass;
+        ballMass.text = $"{newMass:F2} kg";
+        massSlider.value = newMass;
+        UpdateButtonStatesMass(newMass);
+    }
+
+    private void UpdateButtonStatesMass(float currentMass)
+    {
+        increaseMassButton.interactable = currentMass < MaxMass;
+        decreaseMassButton.interactable = currentMass > MinMass;
+    }
 
     public void ResetSphere()
     {
@@ -70,11 +129,8 @@ public class SphereActions : MonoBehaviour
         sphereTransform.rotation = initialRotation;
         sphereTransform.localScale = initialScale;
         sphereRigidbody.mass = initialMass;
-
         radiusSlider.value = initialRadiusSliderValue;
         massSlider.value = initialMassSliderValue;
-
-       // NotifyRampActions();
     }
 
     public void Respawn()

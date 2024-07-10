@@ -36,6 +36,9 @@ public class RampActions : MonoBehaviour
     public TMP_Text energyText;
     public TMP_Text rampHeight;
 
+    public Button increaseHeightButton;
+    public Button decreaseHeightButton;
+
 
     void Start()
     {
@@ -62,14 +65,41 @@ public class RampActions : MonoBehaviour
     {
         CalculatePhysics();
     }
-
     public void UpdateHeight(float value)
     {
         Vector3 currentScale = rampTransform.localScale;
-        rampTransform.localScale = new Vector3(currentScale.x, value, currentScale.z); 
+        rampTransform.localScale = new Vector3(currentScale.x, value, currentScale.z);
         rampHeight.text = $"{value:F2} m";
-
+        heightSlider.value = value;
+        UpdateButtonStates(value);
     }
+
+    public void IncreaseHeight()
+    {
+        Vector3 currentScale = rampTransform.localScale;
+        float newYScale = Mathf.Clamp(currentScale.y + 0.1f, 0.1f, 1.0f);
+        rampTransform.localScale = new Vector3(currentScale.x, newYScale, currentScale.z);
+        rampHeight.text = $"{newYScale:F2} m";
+        heightSlider.value = newYScale;
+        UpdateButtonStates(newYScale);
+    }
+
+    public void DecreaseHeight()
+    {
+        Vector3 currentScale = rampTransform.localScale;
+        float newYScale = Mathf.Clamp(currentScale.y - 0.1f, 0.1f, 1.0f);
+        rampTransform.localScale = new Vector3(currentScale.x, newYScale, currentScale.z);
+        rampHeight.text = $"{newYScale:F2} m";
+        heightSlider.value = newYScale;
+        UpdateButtonStates(newYScale);
+    }
+
+    private void UpdateButtonStates(float currentHeight)
+    {
+        increaseHeightButton.interactable = currentHeight < 1.0f;
+        decreaseHeightButton.interactable = currentHeight > 0.1f;
+    }
+
 
     public void ChangeMaterial(int index)
     {

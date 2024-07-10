@@ -11,17 +11,14 @@ public class TestTubeFill : MonoBehaviour
     private Color targetLiquidColor;
     private Color currentColor;
     public TextMeshProUGUI debugText;
-
-    public Transform rackTransform; // Reference to the rack GameObject
-    public float snapDistance = 0.2f; // Distance within which the test tube will snap to a slot
-    private Rigidbody tubeRigidbody;
-
+    private List<string> collidedObjects; // List to keep track of collided objects
 
     void Start()
     {
         currentColor = new Color(1, 1, 1, 0); // Transparent color
         targetLiquidColor = currentColor; // Initialize target color to transparent
         testTubeMaterial.SetColor("_Liquid", currentColor);
+        collidedObjects = new List<string>(); // Initialize the list
     }
 
     void Update()
@@ -32,16 +29,51 @@ public class TestTubeFill : MonoBehaviour
             currentColor = testTubeMaterial.GetColor("_Liquid");
             testTubeMaterial.SetColor("_Liquid", Color.Lerp(currentColor, targetLiquidColor, Time.deltaTime));
         }
+
+        // Check if both "POTASSIUM" and "IODINE" are in the list
+        if (collidedObjects.Contains("POTASSIUM-PERMANGANATE") && collidedObjects.Contains("POTASSIUM-DICHROMATE"))
+        {
+            debugText.text = "Mixing Result: Potassium Permanganate and Potassium Dichromate mixed to create Chromium(III) Sulfate solution!";
+        }
+        if (collidedObjects.Contains("POTASSIUM-PERMANGANATE") && collidedObjects.Contains("FERRIC-CHLORIDE"))
+        {
+            debugText.text = "Mixing Result: Potassium Permanganate and Ferric Chloride mixed to create Iron(III) Chloride solution!";
+        }
+        if (collidedObjects.Contains("POTASSIUM-PERMANGANATE") && collidedObjects.Contains("NICKEL-SULFATE"))
+        {
+            debugText.text = "Mixing Result: Potassium Permanganate and Nickel Sulfate mixed to create Nickel(III) Sulfate solution!";
+        }
+        if (collidedObjects.Contains("FERRIC-CHLORIDE") && collidedObjects.Contains("POTASSIUM-DICHROMATE"))
+        {
+            debugText.text = "Mixing Result: Potassium Dichromate and Ferric Chloride mixed to create Chromium(III) Chloride solution!";
+        }
+        if (collidedObjects.Contains("FERRIC-CHLORIDE") && collidedObjects.Contains("NICKEL-SULFATE"))
+        {
+            debugText.text = "Mixing Result: Ferric Chloride and Nickel Sulfate mixed to create Nickel(II) chloride solution!";
+        }
+        if (collidedObjects.Contains("POTASSIUM-DICHROMATE") && collidedObjects.Contains("NICKEL-SULFATE"))
+        {
+            debugText.text = "Mixing Result: Potassium Dichromate and Nickel Sulfate mixed to create a Nickel(II) Dichromate solution!";
+        }
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        debugText.text = "Collided with: " + collision.gameObject.name + "\n";
+        string collidedObjectName = collision.gameObject.name.ToUpper();
 
-
-        if (collision.gameObject.CompareTag("Potassium"))
+        // Check if the collided object is either "POTASSIUM" or "IODINE"
+        if (collidedObjectName == "POTASSIUM-PERMANGANATE" || collidedObjectName == "POTASSIUM-DICHROMATE" || collidedObjectName == "NICKEL-SULFATE" || collidedObjectName == "FERRIC-CHLORIDE")
         {
+            // Add the object to the list if it hasn't been added already
+            if (!collidedObjects.Contains(collidedObjectName))
+            {
+                collidedObjects.Add(collidedObjectName);
+                debugText.text += "Collided with: " + collidedObjectName + "\n";
+            }
+
+            // Process the collision
             IncreaseFillAmount();
+
             // Get the color from the collided object's child's material
             Transform childTransform = collision.transform.GetChild(0); // Assuming the child is the first child
             if (childTransform != null)
@@ -62,26 +94,37 @@ public class TestTubeFill : MonoBehaviour
 
     void OnParticleCollision(GameObject other)
     {
-        debugText.text = "Particle collision with: " + other.name + "\n";
+        string collidedObjectName = other.name.ToUpper();
 
-        IncreaseFillAmount();
-
-        ParticleSystem particleSystem = other.GetComponent<ParticleSystem>();
-        if (particleSystem != null)
+        // Check if the collided object is either "POTASSIUM" or "IODINE"
+        if (collidedObjectName == "POTASSIUM-PERMANGANATE" || collidedObjectName == "POTASSIUM-DICHROMATE" || collidedObjectName == "NICKEL-SULFATE" || collidedObjectName == "FERRIC-CHLORIDE")
         {
-            ParticleSystem.MainModule mainModule = particleSystem.main;
-            if (mainModule.startColor.mode == ParticleSystemGradientMode.Color)
+            // Add the object to the list if it hasn't been added already
+            if (!collidedObjects.Contains(collidedObjectName))
             {
-                MixLiquidColor(mainModule.startColor.color); // Use mix instead of set
+                collidedObjects.Add(collidedObjectName);
+                debugText.text += "Particle collision with: " + collidedObjectName + "\n";
             }
-            else if (mainModule.startColor.mode == ParticleSystemGradientMode.Gradient)
+
+            // Process the collision
+            IncreaseFillAmount();
+
+            ParticleSystem particleSystem = other.GetComponent<ParticleSystem>();
+            if (particleSystem != null)
             {
-                // For gradients, we can pick a color from the gradient
-                MixLiquidColor(mainModule.startColor.gradient.Evaluate(Random.value)); // Use mix instead of set
+                ParticleSystem.MainModule mainModule = particleSystem.main;
+                if (mainModule.startColor.mode == ParticleSystemGradientMode.Color)
+                {
+                    MixLiquidColor(mainModule.startColor.color); // Use mix instead of set
+                }
+                else if (mainModule.startColor.mode == ParticleSystemGradientMode.Gradient)
+                {
+                    // For gradients, we can pick a color from the gradient
+                    MixLiquidColor(mainModule.startColor.gradient.Evaluate(Random.value)); // Use mix instead of set
+                }
             }
         }
     }
-
 
     void IncreaseFillAmount()
     {
@@ -105,32 +148,4 @@ public class TestTubeFill : MonoBehaviour
             targetLiquidColor = Color.Lerp(currentColor, newColor, 0.5f); // Adjust the blending factor as needed
         }
     }
-
-  /*  void TrySnapToSlot()
-    {
-        Transform closestSlot = null;
-        float closestDistance = float.MaxValue;
-
-        // Iterate over all child slots of the rack
-        foreach (Transform slot in rackTransform)
-        {
-            float distance = Vector3.Distance(transform.position, slot.position);
-            if (distance < closestDistance && distance < snapDistance)
-            {
-                closestDistance = distance;
-                closestSlot = slot;
-            }
-        }
-
-        // Snap to the closest slot if within the snap distance
-        if (closestSlot != null)
-        {
-            transform.position = closestSlot.position;
-            transform.rotation = closestSlot.rotation;
-            tubeRigidbody.isKinematic = true; // Disable physics to keep it in place
-        }
-    }*/
-
-
-
 }
