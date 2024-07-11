@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
@@ -130,26 +130,44 @@ public class RampActions : MonoBehaviour
 
     private void CalculatePhysics()
     {
+        // Calculate height and angle of the ramp
         float height = rampTransform.localScale.y;
         float angle = Mathf.Atan(height / rampLength);
-        float g = 9.81f;
+        float g = 9.81f; // gravitational constant
 
-        // Calculate acceleration
-        float netForce = g * Mathf.Sin(angle) - staticFrictionCoefficient * g * Mathf.Cos(angle);
-        float acceleration = (5f / 7f) * netForce;
+        // Moment of inertia (for a sphere, I = (2/5) * m * r^2)
+        float radius = sphereTransform.localScale.x / 1f; // Assuming uniform scaling and sphere is scaled uniformly
+        float momentOfInertia = (2f / 5f) * sphereRigidbody.mass * Mathf.Pow(radius, 2f);
+
+        // Calculate net force including friction
+        float normalForce = sphereRigidbody.mass * g * Mathf.Cos(angle);
+        float frictionForce = staticFrictionCoefficient * normalForce;
+        float netForce = sphereRigidbody.mass * g * Mathf.Sin(angle) - frictionForce;
+
+        // Calculate acceleration using torque (τ = I * α)
+        float torque = netForce * radius; // Torque = force * radius
+        float angularAcceleration = torque / momentOfInertia;
+
+        // Calculate linear acceleration considering rolling motion
+        float linearAcceleration = angularAcceleration * radius; // α * r = a
 
         // Calculate final velocity considering rolling resistance
-        float finalVelocity = Mathf.Sqrt(2 * acceleration * rampLength * (1 - rollingResistanceCoefficient));
+        Vector3 velocity = sphereRigidbody.velocity;
+        float finalVelocity = Mathf.Abs(velocity.magnitude); // Take absolute value of magnitude
 
         // Calculate kinetic energy
-        float mass = sphereRigidbody.mass;
-        float kineticEnergy = (7f / 10f) * mass * finalVelocity * finalVelocity;
+        float kineticEnergy = (0.5f) * sphereRigidbody.mass * finalVelocity * finalVelocity;
+
+        
+        //accelerationText.text = $"{linearAcceleration*0.3:F2} m/s²";
+        
 
         // Display values on TMP Text components rounded to 2 decimal places
         velocityText.text = $"{finalVelocity:F2} m/s";
-        accelerationText.text = $"{acceleration:F2} m/s�";
         energyText.text = $"{kineticEnergy:F2} J";
     }
+
+
 
     public void ResetRamp()
     {
