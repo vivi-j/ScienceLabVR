@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class QuestionNumber : MonoBehaviour
 {
-
     [System.Serializable]
     public class Question
     {
@@ -40,12 +39,13 @@ public class QuestionNumber : MonoBehaviour
     private int currentQuestionIndex = 0;
     public List<PlanetSlots> planetSlots;
 
-    // Start is called before the first frame update
+    private string result1 = "Correct answer is Venus, Mercury, Mars, Earth, Neptune, Uranus, Saturn, and Jupiter.";
+    private string result2 = "Correct answer is Mercury, Mars, Venus, Earth, Neptune, Uranus, Saturn, and Jupiter.";
+
     void Start()
     {
         list1.SetActive(false);
         list2.SetActive(false);
-        // Ensure all relevant UI elements are disabled at the start
         questionNumberTMP.gameObject.SetActive(false);
         questionTMP.gameObject.SetActive(false);
         list1TMP.gameObject.SetActive(false);
@@ -54,30 +54,26 @@ public class QuestionNumber : MonoBehaviour
         doneButton.gameObject.SetActive(false);
         nextButton.gameObject.SetActive(false);
 
-        // Add listeners to the buttons
         startButton.onClick.AddListener(OnStartButtonPressed);
         doneButton.onClick.AddListener(OnDoneButtonPressed);
         nextButton.onClick.AddListener(OnNextButtonPressed);
+
     }
 
-    // Method to be called when the Start button is pressed
     void OnStartButtonPressed()
     {
         startButton.gameObject.SetActive(false);
         EnableQuestionUI();
         UpdateQuestionUI();
-        //list1TMP.gameObject.SetActive(true);
-        //list2TMP.gameObject.SetActive(true);
     }
 
-    // Method to be called when the Done button is pressed
     void OnDoneButtonPressed()
     {
         DisableQuestionUI();
         string resultText;
         if (CheckAnswers(out resultText))
         {
-            resultsTMP.text = "Good job!";
+            resultsTMP.text = "Correct!";
         }
         else
         {
@@ -88,7 +84,6 @@ public class QuestionNumber : MonoBehaviour
         nextButton.gameObject.SetActive(true);
     }
 
-    // Method to be called when the Next button is pressed
     void OnNextButtonPressed()
     {
         currentQuestionIndex++;
@@ -100,13 +95,13 @@ public class QuestionNumber : MonoBehaviour
         }
         else
         {
-            // Quiz finished
+            
             resultsTMP.text = "Quiz Completed!";
+            
             nextButton.gameObject.SetActive(false);
         }
     }
 
-    // Enable question-related UI elements
     void EnableQuestionUI()
     {
         list1.SetActive(true);
@@ -115,11 +110,9 @@ public class QuestionNumber : MonoBehaviour
         questionTMP.gameObject.SetActive(true);
         list1TMP.gameObject.SetActive(true);
         list2TMP.gameObject.SetActive(true);
-        
         doneButton.gameObject.SetActive(true);
     }
 
-    // Disable question-related UI elements
     void DisableQuestionUI()
     {
         list1.SetActive(false);
@@ -130,7 +123,6 @@ public class QuestionNumber : MonoBehaviour
         list2TMP.gameObject.SetActive(false);
     }
 
-    // Update the text for the current question
     void UpdateQuestionUI()
     {
         Question currentQuestion = questions[currentQuestionIndex];
@@ -143,17 +135,46 @@ public class QuestionNumber : MonoBehaviour
     bool CheckAnswers(out string resultText)
     {
         resultText = "";
-        bool allCorrect = true;
+        int correctCount = 0;
         for (int i = 0; i < planetSlots.Count; i++)
         {
             GameObject planet = planetSlots[i].planet;
             GameObject correctSlot = planetSlots[i].correctSlots[currentQuestionIndex];
-            if (!planet.GetComponent<Collider>().bounds.Intersects(correctSlot.GetComponent<Collider>().bounds))
+            if (planet.GetComponent<Collider>().bounds.Intersects(correctSlot.GetComponent<Collider>().bounds))
             {
-                allCorrect = false;
-                resultText += $"{planet.name} should be in {correctSlot.name}\n";
+                correctCount++;
             }
         }
-        return allCorrect;
+
+        resultText = $"{correctCount}/{planetSlots.Count} correct\n";
+
+        switch (currentQuestionIndex)
+        {
+            case 0:
+                resultText += result1;
+                break;
+            case 1:
+                resultText += result2;
+                break;
+            default:
+                resultText += "Unknown question result";
+                break;
+        }
+
+        return correctCount == planetSlots.Count;
+    }
+
+    bool CheckAllQuestionsCorrect()
+    {
+        for (int i = 0; i < questions.Count; i++)
+        {
+            currentQuestionIndex = i;
+            string resultText;
+            if (!CheckAnswers(out resultText))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

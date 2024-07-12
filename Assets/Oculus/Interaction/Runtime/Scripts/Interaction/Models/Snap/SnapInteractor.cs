@@ -60,8 +60,6 @@ namespace Oculus.Interaction
         [FormerlySerializedAs("_dropPoint")]
         private Transform _snapPoseTransform;
         public Pose SnapPose => _snapPoseTransform.GetPose();
-        public SnapInteractable _originalSpotSnapInteractable = null;
-
 
         /// <summary>
         /// The default Interactable to snap to until you interact with the object.
@@ -318,20 +316,6 @@ namespace Oculus.Interaction
                 && Time.time - _idleStarted > _timeOut;
         }
 
-        public void OnSnapButtonPressed()
-        {
-            if (_originalSpotSnapInteractable != null)
-            {
-                SetComputeCandidateOverride(() => _originalSpotSnapInteractable, true);
-                _shouldSelect = true;
-            }
-            /* if (_defaultInteractable != null)
-             {
-                 SetComputeCandidateOverride(() => _defaultInteractable, true);
-                 SetComputeShouldSelectOverride(() => true, true);
-             }*/
-        }
-
         protected override SnapInteractable ComputeCandidate()
         {
             if (TimedOut())
@@ -339,7 +323,6 @@ namespace Oculus.Interaction
                 _shouldSelect = true;
                 return _timeOutInteractable;
             }
-
 
             if (_pointableElement.SelectingPointsCount == 0)
             {

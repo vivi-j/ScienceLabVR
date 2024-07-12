@@ -68,7 +68,7 @@ public class TestTubeFill : MonoBehaviour
             if (!collidedObjects.Contains(collidedObjectName))
             {
                 collidedObjects.Add(collidedObjectName);
-                debugText.text += "Collided with: " + collidedObjectName + "\n";
+                //debugText.text += "Collided with: " + collidedObjectName + "\n";
             }
 
             // Process the collision

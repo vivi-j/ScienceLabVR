@@ -153,13 +153,15 @@ public class RampActions : MonoBehaviour
 
         // Calculate final velocity considering rolling resistance
         Vector3 velocity = sphereRigidbody.velocity;
-        float finalVelocity = Mathf.Abs(velocity.magnitude); // Take absolute value of magnitude
+        float finalVelocity = Mathf.Abs(velocity.magnitude*(1-staticFrictionCoefficient)); // Take absolute value of magnitude
 
         // Calculate kinetic energy
         float kineticEnergy = (0.5f) * sphereRigidbody.mass * finalVelocity * finalVelocity;
 
-        
-        //accelerationText.text = $"{linearAcceleration*0.3:F2} m/s²";
+        if(finalVelocity == 0.0f)
+            accelerationText.text = $"{linearAcceleration * 0.0:F2} m/s²";
+        else
+            accelerationText.text = $"{linearAcceleration*0.3:F2} m/s²";
         
 
         // Display values on TMP Text components rounded to 2 decimal places
