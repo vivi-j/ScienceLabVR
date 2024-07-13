@@ -9,6 +9,7 @@ TagManager:
   - IronSulfate
   - SamplesInfoPanel
   - Ramp
+  - Spawn
   layers:
   - Default
   - TransparentFX

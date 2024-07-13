@@ -52,6 +52,21 @@ public class SphereActions : MonoBehaviour
         initialMassSliderValue = massSlider.value;
     }
 
+    public void Update()
+    {
+        
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        // Check if the sphere collided with an object tagged "Spawn"
+        if (collision.gameObject.CompareTag("Spawn"))
+        {
+            Respawn();
+        }
+    }
+
+
 
     public void UpdateRadius(float value)
     {

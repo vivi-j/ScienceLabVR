@@ -5,7 +5,6 @@ using TMPro;
 public class RampActions : MonoBehaviour
 {
     private Transform rampTransform;
-    private MeshFilter meshFilter;
 
     public Renderer rampRenderer;
 
@@ -13,6 +12,11 @@ public class RampActions : MonoBehaviour
     public Material metalMaterial;
     public Material glassMaterial;
     public Material woodMaterial;
+
+    public PhysicMaterial icePhysicMaterial;
+    public PhysicMaterial metalPhysicMaterial;
+    public PhysicMaterial glassPhysicMaterial;
+    public PhysicMaterial woodPhysicMaterial;
 
     private Vector3 initialScale;
     private Material initialMaterial;
@@ -39,7 +43,6 @@ public class RampActions : MonoBehaviour
     public Button increaseHeightButton;
     public Button decreaseHeightButton;
 
-
     void Start()
     {
         rampTransform = transform;
@@ -65,6 +68,7 @@ public class RampActions : MonoBehaviour
     {
         CalculatePhysics();
     }
+
     public void UpdateHeight(float value)
     {
         Vector3 currentScale = rampTransform.localScale;
@@ -100,31 +104,45 @@ public class RampActions : MonoBehaviour
         decreaseHeightButton.interactable = currentHeight > 0.1f;
     }
 
-
     public void ChangeMaterial(int index)
     {
+        PhysicMaterial selectedPhysicMaterial = null;
+
         switch (index)
         {
             case 0: // ice on plastic
                 rampRenderer.material = iceMaterial;
                 staticFrictionCoefficient = 0.05f; // Example coefficient for ice
                 rollingResistanceCoefficient = 0.02f; // Example rolling resistance for ice
+                selectedPhysicMaterial = icePhysicMaterial;
                 break;
             case 1: // metal on plastic
                 rampRenderer.material = metalMaterial;
                 staticFrictionCoefficient = 0.35f; // Example coefficient for metal
                 rollingResistanceCoefficient = 0.3f; // Example rolling resistance for metal
+                selectedPhysicMaterial = metalPhysicMaterial;
                 break;
             case 2: // glass on plastic
                 rampRenderer.material = glassMaterial;
                 staticFrictionCoefficient = 0.7f; // Example coefficient for glass
                 rollingResistanceCoefficient = 0.5f; // Example rolling resistance for glass
+                selectedPhysicMaterial = glassPhysicMaterial;
                 break;
             case 3: // wood on plastic
                 rampRenderer.material = woodMaterial;
                 staticFrictionCoefficient = 0.45f; // Example coefficient for wood
                 rollingResistanceCoefficient = 0.4f; // Example rolling resistance for wood
+                selectedPhysicMaterial = woodPhysicMaterial;
                 break;
+        }
+
+        if (selectedPhysicMaterial != null)
+        {
+            Collider rampCollider = rampTransform.GetComponent<Collider>();
+            if (rampCollider != null)
+            {
+                rampCollider.material = selectedPhysicMaterial;
+            }
         }
     }
 
@@ -152,24 +170,20 @@ public class RampActions : MonoBehaviour
         float linearAcceleration = angularAcceleration * radius; // α * r = a
 
         // Calculate final velocity considering rolling resistance
-        Vector3 velocity = sphereRigidbody.velocity;
-        float finalVelocity = Mathf.Abs(velocity.magnitude*(1-staticFrictionCoefficient)); // Take absolute value of magnitude
+        float initialVelocity = 0.0f; // Assuming it starts from rest
+        float finalVelocity = Mathf.Sqrt(2 * netForce * rampLength / sphereRigidbody.mass); // v^2 = u^2 + 2as
 
+        // Adjust final velocity for friction
+        finalVelocity *= (1 - staticFrictionCoefficient);
+        float vel = sphereRigidbody.velocity.x;
         // Calculate kinetic energy
         float kineticEnergy = (0.5f) * sphereRigidbody.mass * finalVelocity * finalVelocity;
 
-        if(finalVelocity == 0.0f)
-            accelerationText.text = $"{linearAcceleration * 0.0:F2} m/s²";
-        else
-            accelerationText.text = $"{linearAcceleration*0.3:F2} m/s²";
-        
-
         // Display values on TMP Text components rounded to 2 decimal places
-        velocityText.text = $"{finalVelocity:F2} m/s";
+        velocityText.text = $"{vel:F2} m/s";
+        accelerationText.text = $"{linearAcceleration:F2} m/s²";
         energyText.text = $"{kineticEnergy:F2} J";
     }
-
-
 
     public void ResetRamp()
     {
@@ -179,5 +193,12 @@ public class RampActions : MonoBehaviour
         materialDropdown.value = initialMaterialDropdownValue;
         staticFrictionCoefficient = 0.05f;
         rollingResistanceCoefficient = 0.02f;
+
+        // Reset the PhysicMaterial of the ramp collider to default
+        Collider rampCollider = rampTransform.GetComponent<Collider>();
+        if (rampCollider != null)
+        {
+            rampCollider.material = null;
+        }
     }
 }
