@@ -30,6 +30,7 @@ Library: C:\Users\vaish\OneDrive\Github\ScienceLabVR\Temp\BurstOutput\tempburstl
 --assembly-defines=Meta.XR.BuildingBlocks;
 --assembly-defines=Mono.Security;
 --assembly-defines=mscorlib;
+--assembly-defines=Obi;
 --assembly-defines=Oculus.AudioManager;
 --assembly-defines=Oculus.Interaction;
 --assembly-defines=Oculus.Interaction.OVR;
@@ -94,6 +95,7 @@ Library: C:\Users\vaish\OneDrive\Github\ScienceLabVR\Temp\BurstOutput\tempburstl
 --assembly-defines=Meta.XR.BuildingBlocks;
 --assembly-defines=Mono.Security;
 --assembly-defines=mscorlib;
+--assembly-defines=Obi;
 --assembly-defines=Oculus.AudioManager;
 --assembly-defines=Oculus.Interaction;
 --assembly-defines=Oculus.Interaction.OVR;

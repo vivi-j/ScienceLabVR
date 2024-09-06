@@ -1,0 +1,163 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5922843119834417317
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2366735862490675906}
+  - component: {fileID: 8920802802453495006}
+  - component: {fileID: 403987030199194443}
+  - component: {fileID: 6290120391153341264}
+  - component: {fileID: 749429482695287080}
+  - component: {fileID: 6121217818341482161}
+  m_Layer: 0
+  m_Name: Main Camera
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2366735862490675906
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5922843119834417317}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.20661342, y: -0.37299109, z: 0.08558206, w: 0.9004801}
+  m_LocalPosition: {x: 4.02, y: 3.62, z: -4.02}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 25.845001, y: -45.000004, z: 0}
+--- !u!20 &8920802802453495006
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5922843119834417317}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.14827585, g: 0.14827585, b: 0.14827585, a: 0.019607844}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 3.6
+  m_Depth: -1
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 0
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 1
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!124 &403987030199194443
+Behaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5922843119834417317}
+  m_Enabled: 1
+--- !u!81 &6290120391153341264
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5922843119834417317}
+  m_Enabled: 1
+--- !u!114 &749429482695287080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5922843119834417317}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62e83a599724f45a4aa337d74764e572, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skin: {fileID: 11400000, guid: b90d3c214c99743b0865fc0e0d1f1a15, type: 2}
+  threadColor: {r: 0, g: 1, b: 1, a: 1}
+  taskColor: {r: 0, g: 1, b: 0, a: 1}
+  parallelTaskColor: {r: 1, g: 0.8, b: 0.2, a: 1}
+  renderTaskColor: {r: 0.2, g: 0.7, b: 1, a: 1}
+  defaultTaskColor: {r: 1, g: 0.5, b: 0.2, a: 1}
+  showPercentages: 1
+  profileThrottle: 30
+--- !u!114 &6121217818341482161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5922843119834417317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c1a04b0b1141422fb89a6def170146d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  particleRenderers:
+  - {fileID: 0}
+  settings:
+    blendSource: 5
+    blendDestination: 10
+    particleBlendSource: 2
+    particleBlendDestination: 0
+    particleZWrite: 0
+    thicknessCutoff: 1.2
+    thicknessDownsample: 2
+    generateSurface: 1
+    blurRadius: 0.02
+    surfaceDownsample: 1
+    lighting: 1
+    smoothness: 0.8
+    metalness: 0
+    ambientMultiplier: 1
+    generateReflection: 1
+    reflection: 0.2
+    generateRefraction: 1
+    transparency: 1
+    absorption: 5
+    refraction: 0.01
+    refractionDownsample: 1
+    generateFoam: 1
+    foamDownsample: 1
